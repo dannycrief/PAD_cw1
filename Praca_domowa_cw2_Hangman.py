@@ -82,13 +82,24 @@ class Hangman(Game):
                 print("NO. Try again")
                 self.level -= 1
             else:
+                self.HIDDEN_GUESS_WORD = self.show_letter(user_input)
                 print("Yep. You did it :) Go ahead!")
+            if self.GUESS_WORD == self.HIDDEN_GUESS_WORD:
+                print("You won.")
+                break
         if self.level == 0:
             print("You loose :(")
 
     @staticmethod
     def hide_guess_word(word):
         return "_" * len(word)
+
+    def show_letter(self, letter):
+        word = self.HIDDEN_GUESS_WORD
+        idx_list = [pos for pos, char in enumerate(self.GUESS_WORD) if char == letter]
+        for i in idx_list:
+            word = word[:i] + letter + word[i + 1:]
+        return word
 
 
 Hangman(level="low", language="EN", players_number=2).start()
