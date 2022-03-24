@@ -1,3 +1,6 @@
+import random
+
+
 class Game:
     PLAYERS = [1, 2]
     LANGUAGES = ["EN", "PL"]
@@ -5,6 +8,37 @@ class Game:
         "low": 8,
         "medium": 5,
         "hard": 3
+    }
+
+    vocabulary = {
+        "guess_word": {
+            "EN": "Guess a word :)",
+            "PL": "Zgadnij słowo :)"
+        },
+        "get_u1_word": {
+            "EN": "Player 1, type a word to guess:\n",
+            "PL": "Gracz 1, wpisz słowo, do odgadywania:\n "
+        },
+        "get_character": {
+            "EN": "Type letter:\n",
+            "PL": "Podaj literę:\n"
+        },
+        "try_again": {
+            "EN": "NO.Try again",
+            "PL": "NIE. Spróbuj ponownie."
+        },
+        "correct_answer": {
+            "EN": "Yep. You did it :) That letter is correct. Go on!",
+            "PL": "Yep. Udało Ci się :) Ta litera jest poprawna. Idź dalej!"
+        },
+        "the_end_won": {
+            "EN": "You won :)",
+            "PL": "Wygrałeś :)"
+        },
+        "the_end_lost": {
+            "EN": "You lost :(",
+            "PL": "Przegrałeś :("
+        }
     }
 
     def __init__(self, level, language, players_number):
@@ -57,38 +91,41 @@ class Game:
             "*** Welcome to the Game Hangman ***\n"
             "***********************************\n"
             "***********************************\n"
+            "           {0}".format(self.vocabulary['guess_word'][self.language])
         )
-        print(self.level)
-        print(self.language)
-        print(self.players_number)
-        if self.players_number == 2:
-            self.GUESS_WORD = input("Player 1, type ques word:\n").lower()
 
 
 class Hangman(Game):
     GUESS_WORD = ""
     HIDDEN_GUESS_WORD = ""
+    GUESS_WORDS_LIST = ["trulala", "secret", "something", "boy"]
 
     def __init__(self, level, language, players_number):
         super().__init__(level, language, players_number)
 
     def start(self):
         super()._play()
+        if self.players_number == 2:
+            self.GUESS_WORD = input(self.vocabulary['get_u1_word'][self.language]).lower()
+        else:
+            self.GUESS_WORD = random.choice(self.GUESS_WORDS_LIST)
+
         self.HIDDEN_GUESS_WORD = self.hide_guess_word(self.GUESS_WORD)
+
         while self.level != 0:
             print(self.HIDDEN_GUESS_WORD)
-            user_input = input("Type letter: ").lower()
+            user_input = input(self.vocabulary['get_character'][self.language]).lower()
             if user_input not in self.GUESS_WORD or len(user_input) == 0:
-                print("NO. Try again")
+                print(self.vocabulary['try_again'][self.language])
                 self.level -= 1
             else:
                 self.HIDDEN_GUESS_WORD = self.show_letter(user_input)
-                print("Yep. You did it :) Go ahead!")
+                print(self.vocabulary['correct_answer'][self.language])
             if self.GUESS_WORD == self.HIDDEN_GUESS_WORD:
-                print("You won.")
+                print(self.vocabulary['the_end_won'][self.language])
                 break
         if self.level == 0:
-            print("You loose :(")
+            print(self.vocabulary['the_end_lost'][self.language])
 
     @staticmethod
     def hide_guess_word(word):
@@ -102,4 +139,4 @@ class Hangman(Game):
         return word
 
 
-Hangman(level="low", language="EN", players_number=2).start()
+Hangman(level="hard", language="PL", players_number=1).start()
