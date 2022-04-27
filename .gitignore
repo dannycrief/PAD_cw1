@@ -1,3 +1,7 @@
 venv/
 .idea/
 .ipynb_checkpoints/
+*.jpg
+*.png
+*.jpeg
+*.log
