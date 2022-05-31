@@ -64,7 +64,7 @@ app.layout = html.Div(
      dash.dependencies.Output('opt-dropdown', 'value')],  # setting default value for second dropdown
     [dash.dependencies.Input('name-dropdown', 'value')]
 )
-def update_date_dropdown(name):
+def update_dropdown(name):
     return [{'label': i, 'value': i} for i in fnameDict[name]], fnameDict[name][0]
 
 
