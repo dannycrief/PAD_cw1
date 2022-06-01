@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 
+st.set_option('deprecation.showPyplotGlobalUse', False)
+
 st.header('Homework 10')
 
 page = st.sidebar.selectbox('Select page:', ['Survey', 'Stats'])
@@ -23,9 +25,7 @@ else:
         df = pd.read_csv(data)
         st.dataframe(df.head(20))
         selected_col = st.multiselect("Select columns to plot", df.columns.tolist())
-        # px.pie(df[['gender', selected_col]], values=df[selected_col], names='gender')
-        # print(df.groupby('gender')['birthdate'].count().apply(list))
-        chart_type = st.radio("Select chart type (for pie plot select 2 values)", ['Pie Plot'])
+        chart_type = st.radio("Select chart type (for pie plot select 2 values)", ['Pie Plot', 'Histogram'])
         if chart_type == 'Pie Plot' and len(selected_col) == 2:
             fig = go.Figure(
                 go.Pie(
@@ -33,3 +33,7 @@ else:
                     values=df.groupby(selected_col[0])[selected_col[1]].count(),
                 ))
             st.plotly_chart(fig)
+        if chart_type == 'Histogram' and len(selected_col) > 0:
+            plot_data = df[selected_col].plot(kind='hist')
+            st.write(plot_data)
+            st.pyplot()
