@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
 
-class OtoDomScrapper:
+class OtoDomScrapperOptions:
     def __init__(self, link: str, maximize_window: bool = False, accept_cookies: bool = False):
         """
         Initialize OtoDomScraper class
