@@ -7,7 +7,7 @@ if __name__ == "__main__":
     )
 
     sc.set_filters(
-        house_type='Mieszkanie', rent_buy='wynajem', localisation='warszawa/bemowo',
+        house_type='Mieszkanie', rent_buy='wynajem', localisation='warszawa',
         price_min=2000, price_max=2750, rooms_number=[1],
         area_min=25, area_max=45
     )

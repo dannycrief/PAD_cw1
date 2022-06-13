@@ -17,6 +17,8 @@ class OtoDomScrapper:
                  'equipment', 'media', 'heating', 'security', 'windows', 'elevator', 'parking_space', 'year_built',
                  'building_material', 'additional_information']
 
+    __PAGES = []
+
     def __init__(self, driver):
         """
         Initialize OtoDomScrapper class
@@ -28,16 +30,25 @@ class OtoDomScrapper:
         with open(file_name, 'w', encoding="utf-8") as csv_file:
             writer = csv.writer(csv_file)
             writer.writerow(self.__COLUMNS)
-            links = self.driver.find_elements(
-                By.XPATH,
-                value='/html/body/div[1]/div[1]/main/div[1]/div[3]/div[1]/div[2]/div[2]/ul/li/a'
-            )
-            links_hrefs = [link.get_attribute('href') for link in links]
-            for link in links_hrefs:
-                self.driver.get(link)
-                row = self.__parse_element()
-                writer.writerow(row)
-                self.driver.back()
+            while self.__parse_pagination():
+                links = self.driver.find_elements(
+                    By.XPATH,
+                    value='/html/body/div[1]/div[1]/main/div[1]/div[3]/div[1]/div[2]/div[2]/ul/li/a'
+                )
+                links_hrefs = [link.get_attribute('href') for link in links]
+                for link in links_hrefs:
+                    self.driver.get(link)
+                    row = self.__parse_element()
+                    writer.writerow(row)
+                    self.driver.back()
+                self.driver.find_element(By.XPATH, "//button[@aria-label='następna strona']").click()
+
+    def __parse_pagination(self):
+        try:
+            return self.driver.find_element(By.XPATH, "//button[@aria-label='następna strona']").get_attribute(
+                'disable') != ''
+        except:
+            return False
 
     def __parse_element(self) -> list:
         title = self.__check_not_null(get_title(self.driver))
