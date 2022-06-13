@@ -1,7 +1,7 @@
 import csv
 from selenium.webdriver.common.by import By
 
-from scrapper_statistics.common import is_xpath_exists, wait_url_change, get_title, get_location, get_price, get_area, \
+from scrapper_statistics.common import get_title, get_location, get_price, get_area, \
     get_media_price, get_rooms_number, get_deposit_price, get_floor_number, get_construction_type, get_available_from, \
     get_balcony_garden_terrace, get_advertiser_type, get_is_for_students, get_equipment, get_media, get_heating, \
     get_security, get_windows, get_elevator, get_year_built, get_parking_space, get_building_material, \
@@ -16,8 +16,6 @@ class OtoDomScrapper:
                  'construction_type', 'available_from', 'balcony_garden_terrace', 'advertiser_type', 'is_for_students',
                  'equipment', 'media', 'heating', 'security', 'windows', 'elevator', 'parking_space', 'year_built',
                  'building_material', 'additional_information']
-
-    __PAGES = []
 
     def __init__(self, driver):
         """
