@@ -1,16 +1,24 @@
-import os
-import requests
+import sys
+
 from selenium import webdriver
 
 from scrapper_statistics.common import *
 from scrapper_statistics.sc_web_scrapper import Scrapper
+from selenium.webdriver.firefox.options import Options
 
 
 class OtoDomScrapperOptions(Scrapper):
+    """
+    Child scrapper class that set options before parse data
+    from OtoDom web page
+    """
+
+    __FILENAME = ""
+
     def __init__(self, link: str, maximize_window: bool = False, accept_cookies: bool = False):
         """
-        Initialize OtoDomScraper class
-        :param link:
+        Initialize OtoDomScrapperOptions class
+        :param link: URL link to parse data
         :param maximize_window:
         :param accept_cookies:
         """
@@ -67,9 +75,11 @@ class OtoDomScrapperOptions(Scrapper):
         set_max_area(self.driver, area_max)
         set_rooms_number(self.driver, list(map(str, rooms_number)))
 
+        self.__FILENAME = f"{os.getcwd()}/csv_dir/{rent_buy.lower()}_{house_type.lower()}_{localisation.lower().replace('/', '_')}.csv"
+
     def search(self):
         is_xpath_exists(self.driver, xpath='//*[@id="search-form-submit"]').click()
-        self.parse_data()  # parse page
+        self.parse_data(self.__FILENAME)  # parse page
 
     def end_session(self):
         """
@@ -94,7 +104,12 @@ class OtoDomScrapperOptions(Scrapper):
         Set driver to Firefox and accept cookies if user set parametr
         :return: None
         """
-        self.driver = webdriver.Firefox()
+        fo = Options()
+        fo.add_argument("--headless")
+        if sys.platform == 'win32':
+            self.driver = webdriver.Firefox(executable_path="C:/WebDriver/geckodriver.exe", options=fo)
+        else:
+            self.driver = webdriver.Firefox(options=fo)
         if self.maximize_window:
             self.driver.maximize_window()
         self.driver.get(self.link)

@@ -14,5 +14,4 @@ if __name__ == "__main__":
 
     sc.search()
 
-
-    # sc.end_session()
+    sc.end_session()

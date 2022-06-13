@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
 
 
 def is_xpath_exists(driver, xpath) -> Exception or WebDriverWait:
@@ -17,7 +17,7 @@ def is_xpath_exists(driver, xpath) -> Exception or WebDriverWait:
         element = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, xpath)))
         return element
     except TimeoutException:
-        raise Exception(f"Cannot find element {accept_cookies_xpath}")
+        raise Exception(f"Cannot find element {xpath}")
 
 
 def verify_url_is_correct(driver):
@@ -80,3 +80,101 @@ def set_rooms_number(driver, room_numbers: list):
 def create_csv_dir(path):
     if not os.path.exists(f"{path}/csv_dir"):
         os.makedirs(f"{os.getcwd()}/csv_dir")
+
+
+def get_title(driver) -> str:
+    return driver.find_element(By.XPATH, value='/html/body/div[1]/main/div[2]/div[2]/header/h1').text
+
+
+def get_location(driver) -> str:
+    try:
+        return is_xpath_exists(driver, xpath='/html/body/div[1]/main/div[3]/div[2]/header/div[2]/a').text
+    except:
+        return is_xpath_exists(driver, xpath='/html/body/div[1]/main/div[2]/div[2]/header/div[2]').text
+
+
+def get_price(driver) -> str:
+    return is_xpath_exists(driver, xpath='/html/body/div[1]/main/div[3]/div[2]/header/strong').text
+
+# TODO: Ustawić domyślny rozmiar strony webriver-a
+def get_area(driver) -> str:
+    return driver.find_element(By.XPATH, value='/html/body/div[1]/main/div[2]/div[2]/div[1]/div/div[1]/div[2]/div').text
+
+
+def get_media_price(driver) -> str:
+    return driver.find_element(By.XPATH, value='/html/body/div[1]/main/div[2]/div[2]/div[1]/div/div[2]/div[2]/div').text
+
+
+def get_rooms_number(driver) -> str:
+    return driver.find_element(By.XPATH, value='/html/body/div[1]/main/div[2]/div[2]/div[1]/div/div[3]/div[2]/div').text
+
+
+def get_deposit_price(driver) -> str:
+    return driver.find_element(By.XPATH, value='/html/body/div[1]/main/div[2]/div[2]/div[1]/div/div[4]/div[2]/div').text
+
+
+def get_floor_number(driver) -> str:
+    return driver.find_element(By.XPATH, value='/html/body/div[1]/main/div[2]/div[2]/div[1]/div/div[5]/div[2]/div').text
+
+
+def get_construction_type(driver) -> str:
+    return driver.find_element(By.XPATH, value='/html/body/div[1]/main/div[2]/div[2]/div[1]/div/div[6]/div[2]/div').text
+
+
+def get_available_from(driver) -> str:
+    return driver.find_element(By.XPATH, value='/html/body/div[1]/main/div[2]/div[2]/div[1]/div/div[7]/div[2]').text
+
+
+def get_balcony_garden_terrace(driver) -> str:
+    return driver.find_element(By.XPATH,
+                               value='/html/body/div[1]/main/div[2]/div[2]/div[1]/div/div[8]/div[2]/div').text
+
+
+def get_advertiser_type(driver) -> str:
+    return driver.find_element(By.XPATH, value='/html/body/div[1]/main/div[2]/div[2]/div[3]/div/div[1]/div[2]/div').text
+
+
+def get_is_for_students(driver) -> str:
+    return driver.find_element(By.XPATH, value='/html/body/div[1]/main/div[2]/div[2]/div[3]/div/div[1]/div[2]/div').text
+
+
+def get_equipment(driver) -> str:
+    return driver.find_element(By.XPATH, value='/html/body/div[1]/main/div[2]/div[2]/div[3]/div/div[3]/div[2]/div').text
+
+
+def get_media(driver) -> str:
+    return driver.find_element(By.XPATH, value='/html/body/div[1]/main/div[2]/div[2]/div[3]/div/div[4]/div[2]/div').text
+
+
+def get_heating(driver) -> str:
+    return driver.find_element(By.XPATH, value='/html/body/div[1]/main/div[2]/div[2]/div[3]/div/div[5]/div[2]/div').text
+
+
+def get_security(driver) -> str:
+    return driver.find_element(By.XPATH, value='/html/body/div[1]/main/div[2]/div[2]/div[3]/div/div[6]/div[2]/div').text
+
+
+def get_windows(driver) -> str:
+    return driver.find_element(By.XPATH, value='/html/body/div[1]/main/div[2]/div[2]/div[3]/div/div[7]/div[2]/div').text
+
+
+def get_elevator(driver) -> str:
+    return driver.find_element(By.XPATH, value='/html/body/div[1]/main/div[2]/div[2]/div[3]/div/div[8]/div[2]/div').text
+
+
+def get_parking_space(driver) -> str:
+    return driver.find_element(By.XPATH, value='/html/body/div[1]/main/div[2]/div[2]/div[3]/div/div[9]/div[2]/div').text
+
+
+def get_year_built(driver) -> str:
+    return driver.find_element(By.XPATH, value='/html/body/div[1]/main/div[2]/div[2]/div[3]/div/div[10]/div[2]').text
+
+
+def get_building_material(driver) -> str:
+    return driver.find_element(By.XPATH,
+                               value='/html/body/div[1]/main/div[2]/div[2]/div[3]/div/div[11]/div[2]/div').text
+
+
+def get_additional_information(driver) -> str:
+    return driver.find_element(By.XPATH,
+                               value='/html/body/div[1]/main/div[2]/div[2]/div[3]/div/div[12]/div[2]/div').text

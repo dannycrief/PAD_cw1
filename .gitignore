@@ -5,3 +5,4 @@ venv/
 *.png
 *.jpeg
 *.log
+scrapper_statistics/csv_dir/*.csv
