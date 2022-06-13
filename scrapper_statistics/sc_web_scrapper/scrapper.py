@@ -26,26 +26,20 @@ class OtoDomScrapper:
 
     def parse_data(self, file_name):
         with open(file_name, 'w', encoding="utf-8") as csv_file:
-            writter = csv.writer(csv_file)
-            writter.writerow(self.__COLUMNS)
-            posts_ul = is_xpath_exists(
-                driver=self.driver,
-                xpath="/html/body/div[1]/div[1]/main/div[1]/div[3]/div[1]/div[2]/div[2]/ul"
+            writer = csv.writer(csv_file)
+            writer.writerow(self.__COLUMNS)
+            links = self.driver.find_elements(
+                By.XPATH,
+                value='/html/body/div[1]/div[1]/main/div[1]/div[3]/div[1]/div[2]/div[2]/ul/li/a'
             )
-            posts_li = posts_ul.find_elements(By.TAG_NAME, value='li')
-            search_link = self.driver.current_url
-            for element in posts_li:
-                writter.writerow(self.__get_element(element=element))
-                self.driver.get(search_link)
+            links_hrefs = [link.get_attribute('href') for link in links]
+            for link in links_hrefs:
+                self.driver.get(link)
+                row = self.__parse_element()
+                writer.writerow(row)
+                self.driver.back()
 
-    def __get_element(self, element) -> list:
-        current_page = self.driver.current_url
-        post_a = element.find_element(By.TAG_NAME, 'a')
-        return self.__parse_element(post_a, current_page)
-
-    def __parse_element(self, ads, current_page) -> list:
-        ads.click()
-        wait_url_change(self.driver, current_page)
+    def __parse_element(self) -> list:
         title = self.__check_not_null(get_title(self.driver))
         location = self.__check_not_null(get_location(self.driver))  # Tu błąd
         price = self.__check_not_null(get_price(self.driver))

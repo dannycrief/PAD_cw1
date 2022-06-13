@@ -15,7 +15,7 @@ class OtoDomScrapperOptions(Scrapper):
 
     __FILENAME = ""
 
-    def __init__(self, link: str, maximize_window: bool = False, accept_cookies: bool = False):
+    def __init__(self, link: str, maximize_window: bool = True, accept_cookies: bool = False):
         """
         Initialize OtoDomScrapperOptions class
         :param link: URL link to parse data
@@ -108,10 +108,10 @@ class OtoDomScrapperOptions(Scrapper):
         fo.add_argument("--headless")
         if sys.platform == 'win32':
             self.driver = webdriver.Firefox(executable_path="C:/WebDriver/geckodriver.exe", options=fo)
-        else:
-            self.driver = webdriver.Firefox(options=fo)
+        elif sys.platform == 'linux':
+            self.driver = webdriver.Firefox()  # options=fo
         if self.maximize_window:
-            self.driver.maximize_window()
+            self.driver.maximize_window()  # change on production
         self.driver.get(self.link)
         if self.accept_cookies:
             is_xpath_exists(self.driver, xpath='//*[@id="onetrust-accept-btn-handler"]').click()
