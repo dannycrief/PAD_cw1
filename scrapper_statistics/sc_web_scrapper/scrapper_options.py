@@ -33,7 +33,7 @@ class OtoDomScrapperOptions(Scrapper):
 
         print("HINT: You can set filter localisation as 'warszawa' or 'warszawa/bemowo'\n")
 
-        create_csv_dir(os.getcwd())
+        create_csv_dir(os.getcwd())  # create dir for csvs if not exists
 
     def set_filters(self, house_type: str, rent_buy: str, localisation: str, price_min: int,
                     price_max: int, rooms_number: list, area_min: int, area_max: int):
@@ -67,7 +67,7 @@ class OtoDomScrapperOptions(Scrapper):
 
         verify_url_is_correct(self.driver)
 
-        is_xpath_exists(self.driver, xpath='/html/body/div[1]/div[2]/div/div/span').click()  # Close ads
+        wait_for_element_by_xpath(self.driver, xpath='/html/body/div[1]/div[2]/div/div/span').click()  # Close ads
 
         set_min_price(self.driver, price_min)
         set_max_price(self.driver, price_max)
@@ -78,7 +78,7 @@ class OtoDomScrapperOptions(Scrapper):
         self.__FILENAME = f"{os.getcwd()}/csv_dir/{rent_buy.lower()}_{house_type.lower()}_{localisation.lower().replace('/', '_')}.csv"
 
     def search(self):
-        is_xpath_exists(self.driver, xpath='//*[@id="search-form-submit"]').click()
+        wait_for_element_by_xpath(self.driver, xpath='//*[@id="search-form-submit"]').click()
         self.parse_data(self.__FILENAME)  # parse page
 
     def end_session(self):
@@ -114,5 +114,5 @@ class OtoDomScrapperOptions(Scrapper):
             self.driver.maximize_window()  # change on production
         self.driver.get(self.link)
         if self.accept_cookies:
-            is_xpath_exists(self.driver, xpath='//*[@id="onetrust-accept-btn-handler"]').click()
+            wait_for_element_by_xpath(self.driver, xpath='//*[@id="onetrust-accept-btn-handler"]').click()
             print("Cookies accepted")

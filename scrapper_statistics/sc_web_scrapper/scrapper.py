@@ -5,7 +5,7 @@ from scrapper_statistics.common import get_title, get_location, get_price, get_a
     get_media_price, get_rooms_number, get_deposit_price, get_floor_number, get_construction_type, get_available_from, \
     get_balcony_garden_terrace, get_advertiser_type, get_is_for_students, get_equipment, get_media, get_heating, \
     get_security, get_windows, get_elevator, get_year_built, get_parking_space, get_building_material, \
-    get_additional_information
+    get_additional_information, is_xpath_clickable
 
 
 class OtoDomScrapper:
@@ -16,6 +16,8 @@ class OtoDomScrapper:
                  'construction_type', 'available_from', 'balcony_garden_terrace', 'advertiser_type', 'is_for_students',
                  'equipment', 'media', 'heating', 'security', 'windows', 'elevator', 'parking_space', 'year_built',
                  'building_material', 'additional_information']
+
+    __NEXT_BUTTON_XPATH = "//button[@aria-label='następna strona']"
 
     def __init__(self, driver):
         """
@@ -28,7 +30,7 @@ class OtoDomScrapper:
         with open(file_name, 'w', encoding="utf-8") as csv_file:
             writer = csv.writer(csv_file)
             writer.writerow(self.__COLUMNS)
-            while self.__parse_pagination():
+            while self.__is_next_button_disabled():
                 links = self.driver.find_elements(
                     By.XPATH,
                     value='/html/body/div[1]/div[1]/main/div[1]/div[3]/div[1]/div[2]/div[2]/ul/li/a'
@@ -39,14 +41,12 @@ class OtoDomScrapper:
                     row = self.__parse_element()
                     writer.writerow(row)
                     self.driver.back()
+                if not is_xpath_clickable(self.driver, self.__NEXT_BUTTON_XPATH):
+                    break
                 self.driver.find_element(By.XPATH, "//button[@aria-label='następna strona']").click()
 
-    def __parse_pagination(self):
-        try:
-            return self.driver.find_element(By.XPATH, "//button[@aria-label='następna strona']").get_attribute(
-                'disable') != ''
-        except:
-            return False
+    def __is_next_button_disabled(self):
+        return self.driver.find_element(By.XPATH, self.__NEXT_BUTTON_XPATH).get_attribute('disabled') is not None
 
     def __parse_element(self) -> list:
         title = self.__check_not_null(get_title(self.driver))
